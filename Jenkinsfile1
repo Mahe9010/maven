@@ -1,0 +1,28 @@
+pipeline {
+    agent any 
+    
+    environment {
+             PATH = "/opt/apache-maven-3.8.3/bin:$PATH"
+         }
+
+    stages {
+        stage('GIT') {
+            steps {
+                // echo 'Hello World'
+                git branch: 'main', url: 'https://github.com/Raviteja1775/Maven-Project.git'
+            }
+        }
+        stage('MAVEN') {
+            steps {
+                // echo 'Hello World'
+                sh 'mvn install'
+            }
+        }
+        stage('DEPLOY') {
+            steps {
+                // echo 'Hello World'
+                deploy adapters: [tomcat9(credentialsId: '4f0b546b-fb12-4798-ba46-7a151e06184e', path: '', url: 'http://192.168.174.128:8081/')], contextPath: null, war: '**/*.war'
+            }
+        }
+    }
+}
